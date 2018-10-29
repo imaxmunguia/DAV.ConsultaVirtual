@@ -4,7 +4,7 @@
   "description": "Proyecto para la clase Desarrollo de Aplicaciones de Vanguardia, CEUTEC, Sede Central, SPS, IV Periodo Académico, 2018.",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/imaxmunguia/DAV.ConsultaVirtual/issues"
   },
-  "homepage": "https://github.com/imaxmunguia/DAV.ConsultaVirtual#readme"
+  "homepage": "https://github.com/imaxmunguia/DAV.ConsultaVirtual#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
+  }
 }
