@@ -10,6 +10,7 @@ var usersRouter = require('./routes/users');
 var pensumsRouter = require('./routes/pensumsRouter');
 var encuestasRouter = require('./routes/encuestasRouter');
 var clasesAprobadasRouter = require('./routes/clasesAprobadasRouter');
+var usuariosRouter = require('./routes/usuariosRouter');
 
 var app = express();
 
@@ -28,6 +29,7 @@ app.use('/users', usersRouter);
 app.use('/pensums', pensumsRouter);
 app.use('/encuestas', encuestasRouter);
 app.use('/caprobadas', clasesAprobadasRouter);
+app.use('/usuarios', usuariosRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
