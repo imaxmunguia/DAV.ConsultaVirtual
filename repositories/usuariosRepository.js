@@ -27,7 +27,8 @@ exports.addItem = function (req, res) {
     var newItem = new model({
         cuenta:req.body.cuenta,
         nombre:req.body.nombre,
-        carrera:req.body.carrera,
+        id_carrera:req.body.id_carrera,
+        desc_carrera:req.body.desc_carrera,
         correo:req.body.correo,
         clave:req.body.clave,
         perfil:req.body.perfil
@@ -44,7 +45,8 @@ exports.updateItem = function (req, res) {
     model.findById(req.params.id, function (err, item) {
         item.cuenta=req.body.cuenta;
         item.nombre=req.body.nombre;
-        item.carrera=req.body.carrera;
+        item.id_carrera=req.body.id_carrera;
+        item.desc_carrera=req.body.desc_carrera;
         item.correo=req.body.correo;
         item.clave=req.body.clave;
         item.perfil=req.body.perfil;
