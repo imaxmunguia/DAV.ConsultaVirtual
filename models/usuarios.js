@@ -4,7 +4,7 @@ let Schema = mongoose.Schema;
 let usuarioSchema = new Schema({
     cuenta: { type: String },
     nombre: { nombres: { type: String }, apellidos: { type: String }},
-    id_carrera: { type: number },
+    id_carrera: { type: Number },
     desc_carrera: { type: String },
     correo:{ type: String },
     clave: { type: Number},
