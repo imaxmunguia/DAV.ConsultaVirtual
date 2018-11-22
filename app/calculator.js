@@ -1,7 +1,6 @@
 'use strict';
 
 function add(a, b) {
-  var t = a;
   return a + b;
 }
 
