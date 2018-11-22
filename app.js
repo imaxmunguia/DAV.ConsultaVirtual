@@ -6,7 +6,7 @@ var logger = require('morgan');
 var mongoose = require('mongoose');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+//var usersRouter = require('./routes/users');
 var pensumsRouter = require('./routes/pensumsRouter');
 var encuestasRouter = require('./routes/encuestasRouter');
 var clasesAprobadasRouter = require('./routes/clasesAprobadasRouter');
@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/api/users', usersRouter);
+//app.use('/api/users', usersRouter);
 app.use('/api/pensums', pensumsRouter);
 app.use('/api/encuestas', encuestasRouter);
 app.use('/api/clasesAprobadas', clasesAprobadasRouter);
