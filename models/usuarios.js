@@ -7,7 +7,7 @@ let usuarioSchema = new Schema({
     id_carrera: { type: Number },
     desc_carrera: { type: String },
     correo:{ type: String },
-    clave: { type: Number},
+    clave: { type: String},
     perfil: { type: String, enum:['Administrador','Coordinador','Estudiante'] },
 }, { versionKey: false });
 

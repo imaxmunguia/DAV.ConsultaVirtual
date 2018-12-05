@@ -1,5 +1,5 @@
 var model = require('../models/Usuarios');
-
+var jwt= require('jsonwebtoken');
 exports.findAll = function (req, res) {
     model.find(function (err, items) {
         if (err)
@@ -18,6 +18,41 @@ exports.findById = function (req, res) {
             res.status(200).json(items);
         console.log('GET /usuarios/id/' + req.params.id)
     });
+};
+
+exports.login = function (req, res) {
+    model.findOne({
+            correo:req.body.correo,
+            clave:req.body.clave,
+        }, function (err, user) {
+        if (err)
+            res.status(500).send(err.message);
+        else
+            if(user==null){
+                res.status(400).send('Usuario no encontrado');
+                return
+            }
+            var token=jwt.sign({id:user._id,perfil:user.perfil},'hhh');
+            res.status(200).json({
+                token:token,
+                perfil:user.perfil
+            });
+        console.log('GET /usuarios/id/' + req.body.correo)
+    });
+};
+
+exports.getUserProfile = function (req){    
+    var token = req.get("Authorization")
+    if(typeof token==='undefined'){
+        
+        return null;
+    }
+
+    var bearer=token.split(' ');
+    var userToken=jwt.decode(bearer[1],{
+        key:'hhh'
+    })
+    return userToken.perfil;
 };
 
 exports.addItem = function (req, res) {

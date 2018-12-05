@@ -13,6 +13,7 @@ var encuestasRouter = require('./routes/encuestasRouter');
 var clasesAprobadasRouter = require('./routes/clasesAprobadasRouter');
 var usuariosRouter = require('./routes/usuariosRouter');
 var catedraticosRouter = require('./routes/catedraticosRouter');
+var votosRouter = require('./routes/votosRouter');
 
 var app = express();
 
@@ -34,6 +35,7 @@ app.use('/api/encuestas', encuestasRouter);
 app.use('/api/clasesAprobadas', clasesAprobadasRouter);
 app.use('/api/usuarios', usuariosRouter);
 app.use('/api/catedraticos', catedraticosRouter);
+app.use('/api/votos', votosRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
