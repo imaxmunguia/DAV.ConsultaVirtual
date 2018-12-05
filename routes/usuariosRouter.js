@@ -6,6 +6,9 @@ router.route('/')
 	.get(repository.findAll)
   	.post(repository.addItem);
 
+
+router.route('/login')
+  .post(repository.login)
  router.route('/:id')
   .get(repository.findById)
   .put(repository.updateItem)
