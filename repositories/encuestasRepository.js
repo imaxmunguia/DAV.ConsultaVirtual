@@ -1,4 +1,5 @@
 var model = require('../models/Encuestas');
+var UserRepository = require('./usuariosRepository');
 
 exports.findAll = function (req, res) {
     model.find(function (err, items) {
@@ -22,7 +23,11 @@ exports.findById = function (req, res) {
 
 exports.addItem = function (req, res) {
     console.log('POST /encuestas');
-    console.log(req.body);
+    var profile = UserRepository.getUserProfile(req)
+    if(profile!=='Coordinador'){
+        res.status(400).send('Permisos insuficientes');
+        return;
+    }
 
     var newItem = new model({
         id_encuesta: req.body.id_encuesta,

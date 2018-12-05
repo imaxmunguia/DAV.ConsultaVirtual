@@ -28,13 +28,26 @@ exports.login = function (req, res) {
         if (err)
             res.status(500).send(err.message);
         else
-            var token=jwt.sign({id:user._id},'hhh');
+            if(user==null){
+                res.status(400).send('Usuario no encontrado');
+                return
+            }
+            var token=jwt.sign({id:user._id,perfil:user.perfil},'hhh');
             res.status(200).json({
                 token:token,
                 perfil:user.perfil
             });
         console.log('GET /usuarios/id/' + req.body.correo)
     });
+};
+
+exports.getUserProfile = function (req){    
+    var token = req.get("Authorization")
+    var bearer=token.split(' ');
+    var userToken=jwt.decode(bearer[1],{
+        key:'hhh'
+    })
+    return userToken.perfil;
 };
 
 exports.addItem = function (req, res) {
