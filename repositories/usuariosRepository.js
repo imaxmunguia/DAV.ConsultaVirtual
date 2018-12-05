@@ -29,7 +29,10 @@ exports.login = function (req, res) {
             res.status(500).send(err.message);
         else
             var token=jwt.sign({id:user._id},'hhh');
-            res.status(200).json(token);
+            res.status(200).json({
+                token:token,
+                perfil:user.perfil
+            });
         console.log('GET /usuarios/id/' + req.body.correo)
     });
 };

@@ -9,7 +9,8 @@ router.route('/')
 
 router.route('/login')
   .post(repository.login)
- router.route('/:id')
+
+router.route('/:id')
   .get(repository.findById)
   .put(repository.updateItem)
   .delete(repository.deleteItem);
