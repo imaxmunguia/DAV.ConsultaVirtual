@@ -43,6 +43,11 @@ exports.login = function (req, res) {
 
 exports.getUserProfile = function (req){    
     var token = req.get("Authorization")
+    if(typeof token==='undefined'){
+        
+        return null;
+    }
+
     var bearer=token.split(' ');
     var userToken=jwt.decode(bearer[1],{
         key:'hhh'
