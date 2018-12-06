@@ -1,14 +1,40 @@
 var model = require('../models/Encuestas');
 var UserRepository = require('./usuariosRepository');
+var PensumsRepository = require('./pensumsRepository');
 
-exports.findAll = function (req, res) {
-    model.find(function (err, items) {
-        if (err)
-            res.status(500).send(err.message);
-        else
-            res.status(200).json(items);
-        console.log('GET /encuestas')
+exports.findAll =  function (req, res) {
+    let perfil=UserRepository.getUserProfile(req);
+    if(perfil==null || perfil=='Administrador'){
+        res.status(401).json({
+            message:'permisos insuficientes'
+        })
+    }
+    let filters={};
+    UserRepository.getUser(req).then( async (user)=>{
+        if(perfil==='Coordinador'){
+            filters={
+                id_catedratico:user.id
+            }
+        }else if(perfil==='Alumno' || perfil==='Estudiante'){
+            //encuestas abiertas, no vencidads, clases sin requisitos pendientes
+            let clases=await PensumsRepository.findSinDependencias(user.id_carrera,user._id);
+            filters={
+                activa:true,
+                fecha_inicio: {"$lt": new Date() },
+                fecha_fin: {"$gte": new Date() },
+                id_carrera:user.id_carrera,
+                id_clase: { "$in" : clases }
+            }
+        }
+        model.find(filters,function (err, items) {
+            if (err)
+                res.status(500).send(err.message);
+            else
+                res.status(200).json(items);
+            console.log('GET /encuestas')
+        });
     });
+    
 };
 
 exports.findById = function (req, res) {

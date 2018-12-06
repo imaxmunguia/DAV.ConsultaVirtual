@@ -6,7 +6,7 @@ let cursadaSchema = new Schema({
     desc_carrera: { type: String },
     id_clase: { type: Number },
     desc_clase: { type: String },
-    id_alumno: {type:Number}
+    id_alumno: {type:String}
 }, { versionKey: false });
 
 let ClasesAprobadas = mongoose.model('ClasesAprobadas', cursadaSchema);

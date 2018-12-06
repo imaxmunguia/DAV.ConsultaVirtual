@@ -20,6 +20,11 @@ exports.findById = function (req, res) {
     });
 };
 
+exports.findByUser = async function (alumno) {
+    let clasesAprobadas=await model.find({id_alumno:alumno});
+    return clasesAprobadas;
+};
+
 exports.addItem = function (req, res) {
     console.log('POST /clasesAprobadas');
     console.log(req.body);
