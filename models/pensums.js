@@ -2,10 +2,10 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let pensumSchema = new Schema({
-    id_carrera: { type: Number },
+    id_carrera: { type: String },
     desc_carrera: { type: String },
     desc_clase: { type: String },
-    id_requisito: { type: Number },
+    id_requisito: { type: String },
     desc_requisito: { type: String }
 }, { versionKey: false });
 
