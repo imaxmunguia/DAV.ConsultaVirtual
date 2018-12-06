@@ -15,6 +15,7 @@ exports.findAll =  function (req, res) {
     UserRepository.getUser(req).then( async (user)=>{
         if(perfil==='Coordinador'){
             filters={
+                activa:true,
                 id_catedratico:user.id
             }
         }else if(perfil==='Alumno' || perfil==='Estudiante'){
@@ -49,7 +50,10 @@ exports.cerradas = function (req, res) {
         return;
     }
     UserRepository.getUser(req).then( async (user)=>{
-        model.find({active:false,id_catedratico:user.id}, function (err, items) {
+        model.find({
+            activa:false,
+            id_catedratico:user.id
+        }, function (err, items) {
             if (err)
                 res.status(500).send(err.message);
             else
