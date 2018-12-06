@@ -40,7 +40,11 @@ exports.login = function (req, res) {
             var token=jwt.sign({id:user._id,perfil:user.perfil},'hhh');
             res.status(200).json({
                 token:token,
-                perfil:user.perfil
+                perfil:user.perfil,
+                nombre:user.nombre,
+                apellido:user.apellido,
+                id_carrera:user.id_carrera,
+                desc_carrera:user.desc_carrera
             });
         console.log('GET /usuarios/id/' + req.body.correo)
     });
@@ -64,7 +68,9 @@ exports.signup = function (req, res){
             token:token,
             perfil:user.perfil,
             nombre:user.nombre,
-            apellido:user.apellido
+            apellido:user.apellido,
+            id_carrera:user.id_carrera,
+            desc_carrera:user.desc_carrera
         });
     });
 }
