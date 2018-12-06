@@ -21,6 +21,17 @@ exports.findById = function (req, res) {
     });
 };
 
+exports.findOne = function (id) {
+    console.log(id);
+    return model.findById(id, function (err, encuesta) {
+        if (err){
+            return null;
+        }
+        else
+            return encuesta;
+    });
+};
+
 exports.addItem = function (req, res) {
     console.log('POST /encuestas');
     var profile = UserRepository.getUserProfile(req)
