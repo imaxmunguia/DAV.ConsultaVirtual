@@ -79,6 +79,9 @@ exports.getUserProfile = function (req){
     var userToken=jwt.decode(bearer[1],{
         key:'hhh'
     })
+    if(userToken==null){
+        return null;
+    }
     return userToken.perfil;
 };
 exports.getUser = function (req) {    
