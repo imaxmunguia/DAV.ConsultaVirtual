@@ -18,6 +18,7 @@ let encuestaSchema = new Schema({
     transporte: { type: Number },
     catedratico: { type: Number },
     otros: { type: Number },
+    votos: { type: Number },
 }, { versionKey: false });
 
 let Encuestas = mongoose.model('Encuestas', encuestaSchema);
