@@ -27,10 +27,10 @@ exports.cursadas = function(req, res){
 				res.status(500).send(err.message);
 			else{
 				for(let i=0;i<items.length ; i ++){
-					let cursada= await clasesAprobadasRepository.find(user.id_carrera,user._id);
+					let clase=items[i];
+					let cursada= await clasesAprobadasRepository.find(user.id_carrera,user._id,clase._id);
 					if(cursada==null){
 						items[i]['cursada']=false;
-						console.log(items[i]);
 					}else{
 						items[i]['cursada']=true;
 					}	

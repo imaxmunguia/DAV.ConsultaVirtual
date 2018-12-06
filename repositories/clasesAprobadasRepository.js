@@ -1,4 +1,5 @@
 var model = require('../models/ClasesAprobadas');
+var UserRepository = require('./usuariosRepository');
 
 exports.findAll = function (req, res) {
     model.find(function (err, items) {
@@ -11,11 +12,47 @@ exports.findAll = function (req, res) {
 };
 
 
-exports.find = function(id_carrera, id_alumno){
+exports.find = function(id_carrera, id_alumno,id_clase){
 	return model.findOne({
         id_carrera:id_carrera,
-        id_alumno:id_alumno
+        id_alumno:id_alumno,
+        id_clase:id_clase
     });
+};
+
+
+exports.toggle = function(req,res){
+    var profile = UserRepository.getUserProfile(req)
+    if(profile==null &&  (profile!=='Estudiante' || profile!=='Alumno')){
+        res.status(400).send('Permisos insuficientes');
+        return;
+    }
+	UserRepository.getUser(req).then((user)=>{
+        model.findOne({
+            id_carrera:user.id_carrera,
+            id_alumno:user._id
+        }).then((claseCursada)=>{
+            if(claseCursada==null){
+                let nuevaClaseCursada=new model({
+                    id_carrera:user.id_carrera,
+                    id_clase:req.params.id_clase,
+                    id_alumno:user._id,
+                });
+                nuevaClaseCursada.save().then((clase)=>{
+                    res.status(200).json({
+                        'resultado':'Clase aprobada'
+                    })
+                });
+            }else{
+                claseCursada.delete().then(()=>{
+                    res.status(200).json({
+                        'resultado':'Clase cursada eliminada'
+                    })
+                })
+            }
+        })
+    });
+	
 };
 
 exports.findById = function (req, res) {
