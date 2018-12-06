@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 var repository = require('../repositories/clasesAprobadasRepository');
 
+router.route('/toggle/:id_clase')
+  .post(repository.toggle)
+  
 router.route('/')
 	.get(repository.findAll)
   	.post(repository.addItem);
