@@ -8,6 +8,7 @@ exports.findAll =  function (req, res) {
         res.status(401).json({
             message:'permisos insuficientes'
         })
+        return;
     }
     let filters={};
     UserRepository.getUser(req).then( async (user)=>{
