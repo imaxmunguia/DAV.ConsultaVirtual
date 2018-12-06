@@ -1,5 +1,6 @@
 var model = require('../models/Pensums');
 var clasesAprobadasRepository= require('./clasesAprobadasRepository');
+var UserRepository = require('./usuariosRepository');
 exports.findAll = function(req, res){
 	model.find(function(err, items){
     	if(err) 
@@ -8,6 +9,32 @@ exports.findAll = function(req, res){
     		res.status(200).json(items);
     	console.log('GET /pensums')
 	});
+};
+
+exports.clases = function(req, res){
+	UserRepository.getUser(req).then((user)=>{
+		console.log(user);
+		model.find({
+			id_carrera:user.id_carrera
+		},function(err, items){
+			if(err) 
+				res.status(500).send(err.message);
+			else{
+				let clases={};
+				items.map((e)=>{
+					clases[e._id]={
+						id:e._id,
+						desc_clase:e.desc_clase
+					}
+				});
+				res.status(200).json(Object.values(clases));
+			}
+				
+				
+			console.log('GET /pensums')
+		});
+	});
+	
 };
 
 exports.findById = function(req, res){
