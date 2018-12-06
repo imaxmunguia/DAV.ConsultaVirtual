@@ -40,6 +40,22 @@ exports.findAll =  function (req, res) {
     
 };
 
+exports.cerradas = function (req, res) {
+    let perfil=UserRepository.getUserProfile(req);
+    if(perfil==null || perfil=='Administrador' || perfil=='Alumno' || perfil=='Estudiante'){
+        res.status(401).json({
+            message:'permisos insuficientes'
+        })
+        return;
+    }
+    model.find({active:false}, function (err, items) {
+        if (err)
+            res.status(500).send(err.message);
+        else
+            res.status(200).json(items);
+    });
+};
+
 exports.findById = function (req, res) {
     model.findById(req.params.id, function (err, items) {
         if (err)

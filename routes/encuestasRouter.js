@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 var repository = require('../repositories/encuestasRepository');
 
+router.route('/cerradas')
+	.get(repository.cerradas)
+
 router.route('/')
 	.get(repository.findAll)
   	.post(repository.addItem);
