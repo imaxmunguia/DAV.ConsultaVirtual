@@ -60,7 +60,6 @@ exports.addItem = function (req, res) {
                             return;
                         }
                         res.status(200).json({'result':'voto guardado'});    
-                        console.log('POST /votos'); 
                     });   
                 })
             })
