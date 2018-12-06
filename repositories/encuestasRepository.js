@@ -22,9 +22,11 @@ exports.findById = function (req, res) {
 };
 
 exports.findOne = function (id) {
-    model.findById(id, function (err, encuesta) {
-        if (err)
+    console.log(id);
+    return model.findById(id, function (err, encuesta) {
+        if (err){
             return null;
+        }
         else
             return encuesta;
     });

@@ -2,8 +2,8 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let votoSchema = new Schema({
-    id_encuesta: { type: Number },
-    id_alumno: { type: Number },
+    id_encuesta: { type: String },
+    id_alumno: { type: String },
     id_clase: { type: Number },
     aceptacion: { type: Boolean },
     horario: { type: Number },

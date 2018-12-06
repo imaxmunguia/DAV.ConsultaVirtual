@@ -4,64 +4,76 @@ var EncuestaRepository = require('./encuestasRepository');
 
 
 exports.findAll = function (req, res) {
-    if(typeof req.params.id_encuesta==='undefined' ){
+    if(typeof req.body.id_encuesta==='undefined' ){
         res.status(406).send('Debe proveer un ID de Encuesta');
         return;
     }
-    model.find({
+    model.findAll({
         id_encuesta: req.body.id_encuesta
     },function (err, items) {
         if (err)
             res.status(500).send(err.message);
         else
             res.status(200).json(items);
-      });
-};
+        console.log('GET /votos')
+    })
+}
 
 exports.addItem = function (req, res) {
     var profile = UserRepository.getUserProfile(req)
-    console.log(profile)
-    if(profile==null || profile!=='Estudiante'){
+    if(profile==null &&  (profile!=='Estudiante' || profile!=='Alumno')){
         res.status(400).send('Permisos insuficientes');
         return;
     }
-
-    var newItem = new model({
-        id_encuesta: req.body.id_encuesta,
-        id_alumno: req.body.id_alumno,
-        id_clase: req.body.id_clase,
-        aceptacion: req.body.aceptacion,
-        horario: req.body.horario,
-        dinero: req.body.dinero,
-        campus: req.body.campus,
-        transporte: req.body.transporte,
-        catedratico: req.body.catedratico,
-        otros: req.body.otros,
-        observacion: req.body.observacion
-    });
-
-    var encuesta=EncuestaRepository.findOne(newItem.id_encuesta);
-    model.findAll({id_encuesta:encuesta.id}).then((votos)=>{
-        
-        encuesta.dinero=calcularPromedio(votos,'dinero');
-        encuesta.transporte=calcularPromedio(votos,'transporte');
-        encuesta.horario=calcularPromedio(votos,'horario');
-        encuesta.aceptacion=calcularAceptacion(votos);
-        encuesta.campus=calcularPromedio(votos,'campus');
-        encuesta.transporte=calcularPromedio(votos,'transporte');
-        encuesta.catedratico=calcularPromedio(votos,'catedratico');
-        encuesta.otros=calcularPromedio(votos,'otros');
-        encuesta.save();
-
-        res.status(200).json('encuesta guardada')    
-        console.log('POST /votos');    
+    UserRepository.getUser(req).then((user)=>{
+        let voto=req.body;
+        voto.id_encuesta=req.params.id_encuesta;
+        voto.id_alumno=user.id;
+        let newItem = new model(voto);
+        console.log(voto);
+        newItem.save((err,nuevoVoto)=>{
+            if(err){
+                res.status(500).send({
+                    result:'error al guardar',
+                    message:err.message
+                });
+                return;
+            }
+            EncuestaRepository.findOne(voto.id_encuesta).then((encuesta)=>{
+                if(encuesta==null){
+                    res.status(400).send('Encuesta no encontrada'); 
+                    return;
+                }
+                model.find({id_encuesta:encuesta.id}).then((votos)=>{
+                    encuesta.dinero=calcularPromedio(votos,'dinero');
+                    encuesta.transporte=calcularPromedio(votos,'transporte');
+                    encuesta.horario=calcularPromedio(votos,'horario');
+                    encuesta.aceptacion=calcularAceptacion(votos);
+                    encuesta.campus=calcularPromedio(votos,'campus');
+                    encuesta.transporte=calcularPromedio(votos,'transporte');
+                    encuesta.catedratico=calcularPromedio(votos,'catedratico');
+                    encuesta.otros=calcularPromedio(votos,'otros');
+                    encuesta.save((err,encuesta)=>{
+                        if(err){
+                            res.status(500).json({'result':err.message});        
+                            return;
+                        }
+                        res.status(200).json({'result':'voto guardado'});    
+                        console.log('POST /votos'); 
+                    });   
+                })
+            })
+        })
     })
+    
+
+    
 };
 
 function calcularPromedio(votos,campo){
     let cantidadVotos=votos.length;
     let resultado=0;
-    for(let i=0; i>votos.length ; i++ ){
+    for(let i=0; i<votos.length ; i++ ){
         resultado+=votos[i][campo];
     }
     return resultado/cantidadVotos;
@@ -69,7 +81,7 @@ function calcularPromedio(votos,campo){
 
 function calcularAceptacion(votos){
     let resultado=0;
-    for(let i=0; i>votos.length ; i++ ){
+    for(let i=0; i<votos.length ; i++ ){
         if(votos[i].aceptacion==true){
             resultado++;
         }
