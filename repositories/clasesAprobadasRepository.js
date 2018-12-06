@@ -65,8 +65,11 @@ exports.findById = function (req, res) {
     });
 };
 
-exports.findByUser = async function (alumno) {
-    let clasesAprobadas=await model.find({id_alumno:alumno});
+exports.findByUser = async function (id_carrera,id_alumno) {
+    let clasesAprobadas=await model.find({
+        id_carrera:id_carrera,
+        id_alumno:id_alumno
+    });
     return clasesAprobadas;
 };
 

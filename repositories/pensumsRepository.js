@@ -128,21 +128,24 @@ exports.deleteItem = function(req, res) {
 
 exports.findSinDependencias = async  function(id_carrera,id_alumno) {
 	let clasesCarrera= await model.find({id_carrera:id_carrera});
-	let clasesPasadas= await clasesAprobadasRepository.findByUser(id_alumno);
+	let clasesPasadas= await clasesAprobadasRepository.findByUser(id_carrera,id_alumno);
 	let id_clases=[];
 	let id_clasespasadas=clasesPasadas.map((clase)=>clase.id_clase);
 	for(let i=0; i<clasesCarrera.length ; i ++){
 		let clase=clasesCarrera[i];
-		if(clase.id_requisito===null || typeof clase.id_requisito==='undefined' || typeof clase.id_requisito.length==0){
+		if(clase.id_requisito!==null && typeof clase.id_requisito!=='undefined' && clase.id_requisito.length>0){
 			let sinDependenciasPendienes=true;
-			for(let pasada of id_clasespasadas){
-				if(clase.id_requisito.indexOf(pasada)<0 && sinDependenciasPendienes===true){
+			for(let i=0;i<clase.id_requisito.length;i++){
+				let requisito=clase.id_requisito[i];
+				if(requisito.length>0 && id_clasespasadas.indexOf(requisito)<0){
 					sinDependenciasPendienes=false;
 				};
 			}
 			if(sinDependenciasPendienes){
 				id_clases.push(clase._id);
 			}
+		}else{
+			id_clases.push(clase._id);
 		}
 	}
 	return id_clases;

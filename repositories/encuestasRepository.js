@@ -11,7 +11,6 @@ exports.findAll =  function (req, res) {
         return;
     }
     let filters={};
-    console.log(perfil);
     UserRepository.getUser(req).then( async (user)=>{
         if(perfil==='Coordinador'){
             filters={
@@ -29,7 +28,6 @@ exports.findAll =  function (req, res) {
                 id_clase: { "$in" : clases }
             }
         }
-        console.log(filters);
         model.find(filters,function (err, items) {
             if (err)
                 res.status(500).send(err.message);
