@@ -1,5 +1,5 @@
 var model = require('../models/Pensums');
-
+var clasesAprobadasRepository= require('./clasesAprobadasRepository');
 exports.findAll = function(req, res){
 	model.find(function(err, items){
     	if(err) 
@@ -66,4 +66,20 @@ exports.deleteItem = function(req, res) {
      	 	res.status(200).send();
 		});
 	});
+};
+
+
+exports.findSinDependencias = async  function(id_carrera,id_alumno) {
+	let clasesCarrera= await model.find({id_carrera:id_carrera});
+	let clasesPasadas= await clasesAprobadasRepository.findByUser(id_alumno);
+	let id_clases=[];
+	let id_clasespasadas=clasesPasadas.map((clase)=>clase.id_clase);
+	for(let i=0; i<clasesCarrera.length ; i ++){
+		let clase=clasesCarrera[i];
+		if(clase.id_requisito===null || typeof clase.id_requisito==='undefined' || typeof clase.id_requisito==0
+		 || id_clasespasadas.indexOf(clase.id_requisito)>=0){
+			id_clases.push(clase._id);
+		}
+	}
+	return id_clases;
 };
