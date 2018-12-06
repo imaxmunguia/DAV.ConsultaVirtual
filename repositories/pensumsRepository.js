@@ -1,6 +1,7 @@
 var model = require('../models/Pensums');
 var clasesAprobadasRepository= require('./clasesAprobadasRepository');
 var UserRepository = require('./usuariosRepository');
+
 exports.findAll = function(req, res){
 	model.find(function(err, items){
     	if(err) 
@@ -9,6 +10,37 @@ exports.findAll = function(req, res){
     		res.status(200).json(items);
     	console.log('GET /pensums')
 	});
+};
+
+
+exports.cursadas = function(req, res){
+	var profile = UserRepository.getUserProfile(req)
+    if(profile==null &&  (profile!=='Estudiante' || profile!=='Alumno')){
+        res.status(400).send('Permisos insuficientes');
+        return;
+    }
+	UserRepository.getUser(req).then((user)=>{
+		model.find({
+			id_carrera:user.id_carrera
+		}).lean().exec(async function(err, items){
+			if(err)
+				res.status(500).send(err.message);
+			else{
+				for(let i=0;i<items.length ; i ++){
+					let cursada= await clasesAprobadasRepository.find(user.id_carrera,user._id);
+					if(cursada==null){
+						items[i]['cursada']=false;
+						console.log(items[i]);
+					}else{
+						items[i]['cursada']=true;
+					}	
+				}
+				res.status(200).send(items);
+			}
+			console.log('GET /pensums')
+		});
+	})
+	
 };
 
 exports.clases = function(req, res){
@@ -29,8 +61,6 @@ exports.clases = function(req, res){
 				});
 				res.status(200).json(Object.values(clases));
 			}
-				
-				
 			console.log('GET /pensums')
 		});
 	});

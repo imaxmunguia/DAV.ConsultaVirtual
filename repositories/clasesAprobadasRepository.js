@@ -10,6 +10,14 @@ exports.findAll = function (req, res) {
     });
 };
 
+
+exports.find = function(id_carrera, id_alumno){
+	return model.findOne({
+        id_carrera:id_carrera,
+        id_alumno:id_alumno
+    });
+};
+
 exports.findById = function (req, res) {
     model.findById(req.params.id, function (err, items) {
         if (err)
