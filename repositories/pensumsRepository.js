@@ -76,9 +76,16 @@ exports.findSinDependencias = async  function(id_carrera,id_alumno) {
 	let id_clasespasadas=clasesPasadas.map((clase)=>clase.id_clase);
 	for(let i=0; i<clasesCarrera.length ; i ++){
 		let clase=clasesCarrera[i];
-		if(clase.id_requisito===null || typeof clase.id_requisito==='undefined' || typeof clase.id_requisito==0
-		 || id_clasespasadas.indexOf(clase.id_requisito)>=0){
-			id_clases.push(clase._id);
+		if(clase.id_requisito===null || typeof clase.id_requisito==='undefined' || typeof clase.id_requisito.length==0){
+			let sinDependenciasPendienes=true;
+			for(let pasada of id_clasespasadas){
+				if(clase.id_requisito.indexOf(pasada)<0 && sinDependenciasPendienes===true){
+					sinDependenciasPendienes=false;
+				};
+			}
+			if(sinDependenciasPendienes){
+				id_clases.push(clase._id);
+			}
 		}
 	}
 	return id_clases;
