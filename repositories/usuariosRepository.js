@@ -41,6 +41,29 @@ exports.login = function (req, res) {
     });
 };
 
+exports.signup = function (req, res){
+    // model.findOne({
+    //     correo:req.body.correo,
+    //     clave:req.body.clave
+    // };
+    var newItem = new model({
+        cuenta:req.body.cuenta,
+        nombre:req.body.nombre,
+        apellido:req.body.nombre,
+        correo:req.body.correo,
+        perfil: 'Estudiante'      
+    });
+    newItem.save().then((user)=>{
+        var token=jwt.sign({id:user._id,perfil:user.perfil},'hhh');
+        res.status(200).json({
+            token:token,
+            perfil:user.perfil,
+            nombre:user.nombre,
+            apellido:user.apellido
+        });
+    });
+}
+
 exports.getUserProfile = function (req){    
     var token = req.get("Authorization")
     if(typeof token==='undefined'){
@@ -59,6 +82,12 @@ exports.addItem = function (req, res) {
     console.log('POST /usuarios');
     console.log(req.body);
 
+    var profile = UserRepository.getUserProfile(req)
+    if(profile==null || profile!=='Administrador'){
+        res.status(400).send('Permisos insuficientes');
+        return;
+    }
+
     var newItem = new model({
         cuenta:req.body.cuenta,
         nombre:req.body.nombre,
@@ -66,7 +95,7 @@ exports.addItem = function (req, res) {
         desc_carrera:req.body.desc_carrera,
         correo:req.body.correo,
         clave:req.body.clave,
-        perfil:req.body.perfil
+        perfil:'Coordinador'
     });
 
     newItem.save(function (err, item) {
