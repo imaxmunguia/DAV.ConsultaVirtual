@@ -1,6 +1,7 @@
 var model = require('../models/Encuestas');
 var UserRepository = require('./usuariosRepository');
 var PensumsRepository = require('./pensumsRepository');
+var VotosRepository= require('./votosRepository');
 
 exports.findAll =  function (req, res) {
     let perfil=UserRepository.getUserProfile(req);
@@ -20,12 +21,14 @@ exports.findAll =  function (req, res) {
         }else if(perfil==='Alumno' || perfil==='Estudiante'){
             //encuestas abiertas, no vencidads, clases sin requisitos pendientes
             let clases=await PensumsRepository.findSinDependencias(user.id_carrera,user._id);
+            let votos=await VotosRepository.findByUser(user._id);
             filters={
                 activa:true,
                 fecha_inicio: {"$lt": new Date() },
                 fecha_fin: {"$gte": new Date() },
                 id_carrera:user.id_carrera,
-                id_clase: { "$in" : clases }
+                id_clase: { "$in" : clases },
+                _id:{"$nin":votos}
             }
         }
         model.find(filters,function (err, items) {
