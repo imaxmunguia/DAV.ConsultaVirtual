@@ -6,7 +6,7 @@ let pensumSchema = new Schema({
     desc_carrera: { type: String },
     desc_clase: { type: String },
     id_requisito: { type: [String] },
-    desc_requisito: { type: String }
+    id_requisito: { type: String }
 }, { versionKey: false });
 
 let Pensums = mongoose.model('Pensums', pensumSchema);
