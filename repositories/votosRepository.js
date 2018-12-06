@@ -53,6 +53,7 @@ exports.addItem = function (req, res) {
                     encuesta.transporte=calcularPromedio(votos,'transporte');
                     encuesta.catedratico=calcularPromedio(votos,'catedratico');
                     encuesta.otros=calcularPromedio(votos,'otros');
+                    encuesta.votos=calcularVotos(votos);
                     encuesta.save((err,encuesta)=>{
                         if(err){
                             res.status(500).json({'result':err.message});        
@@ -87,4 +88,9 @@ function calcularAceptacion(votos){
         }
     }
     return resultado;
+}
+
+
+function calcularVotos(votos){
+    return votos.length;
 }
