@@ -25,16 +25,25 @@ exports.findById = function (req, res) {
     });
 };
 
-exports.login = function (req, res) {
+exports.login = function (req, res) { 
+    let usuario=req.body;
+    if(typeof usuario.correo=='undefined' || typeof usuario.clave=='undefined' ||!usuario.correo.length>0 || !usuario.clave.length>0){
+        res.status(200).json({
+            error:'Debe proveer un correo y contraseña validos'
+        })
+        return;
+    }
     model.findOne({
-            correo:req.body.correo,
-            clave:req.body.clave,
+            correo:usuario.correo,
+            clave:usuario.clave,
         }, function (err, user) {
         if (err)
             res.status(500).send(err.message);
         else
             if(user==null){
-                res.status(400).send('Usuario no encontrado');
+                res.status(200).json({
+                    error:'Usuario no encontrado'
+                });
                 return
             }
             var token=jwt.sign({id:user._id,perfil:user.perfil},'hhh');
@@ -50,18 +59,28 @@ exports.login = function (req, res) {
     });
 };
 
-exports.signup = function (req, res){
-    // model.findOne({
-    //     correo:req.body.correo,
-    //     clave:req.body.clave
-    // };
-    var newItem = new model({
-        cuenta:req.body.cuenta,
-        nombre:req.body.nombre,
-        apellido:req.body.nombre,
-        correo:req.body.correo,
-        perfil: 'Estudiante'      
+exports.signup = async function (req, res){
+    let newUser=req.body;
+    newUser.perfil='Estudiante';
+    var newItem = new model(newUser);
+    if(typeof newItem.correo=='undefined' || typeof newItem.clave=='undefined' ||!newItem.correo.length>0 || !newItem.clave.length>0){
+        res.status(200).json({
+            error:'Debe proveer un correo y contraseña validos'
+        })
+        return;
+    }
+    let user=await model.findOne({
+        correo:newItem.correo,
+        clave:newItem.clave
     });
+    console.log(user);
+    if(user!=null){
+        res.status(200).json({
+            error:'Usuario ya existe'
+        })
+        return;
+    }
+    
     newItem.save().then((user)=>{
         var token=jwt.sign({id:user._id,perfil:user.perfil},'hhh');
         res.status(200).json({
