@@ -6,6 +6,9 @@ var pensumsRepository = require('../repositories/pensumsRepository');
 router.route('/clases')
 .get(pensumsRepository.clases)
 
+router.route('/cursadas')
+.get(pensumsRepository.cursadas)
+
 router.route('/')
 	.get(pensumsRepository.findAll)
   	.post(pensumsRepository.addItem);

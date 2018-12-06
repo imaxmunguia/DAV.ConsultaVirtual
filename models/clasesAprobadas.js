@@ -2,7 +2,7 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let cursadaSchema = new Schema({
-    id_carrera: { type: Number },
+    id_carrera: { type: String },
     desc_carrera: { type: String },
     id_clase: { type: Number },
     desc_clase: { type: String },
