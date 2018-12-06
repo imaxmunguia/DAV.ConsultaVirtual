@@ -4,12 +4,12 @@ var EncuestaRepository = require('./encuestasRepository');
 
 
 exports.findAll = function (req, res) {
-    if(typeof req.body.id_encuesta==='undefined' ){
+    if(typeof req.params.id_encuesta==='undefined' ){
         res.status(406).send('Debe proveer un ID de Encuesta');
         return;
     }
-    model.findAll({
-        id_encuesta: req.body.id_encuesta
+    model.find({
+        id_encuesta: req.params.id_encuesta
     },function (err, items) {
         if (err)
             res.status(500).send(err.message);
@@ -18,6 +18,24 @@ exports.findAll = function (req, res) {
         console.log('GET /votos')
     })
 }
+
+
+exports.findByUser = async function (id_usuario) {
+    console.log(id_usuario);
+    votos=await model.find({
+        id_alumno:id_usuario
+    });
+    let encuestas=[];
+    for(let i=0;i<votos.length;i++){
+        if (votos[i].id_encuesta.match(/^[0-9a-fA-F]{24}$/)) {
+            encuestas.push(votos[i].id_encuesta);
+          }
+        
+    }
+    return encuestas;
+}
+
+
 
 exports.addItem = function (req, res) {
     var profile = UserRepository.getUserProfile(req)
@@ -39,6 +57,7 @@ exports.addItem = function (req, res) {
                 });
                 return;
             }
+            console.log(nuevoVoto);
             EncuestaRepository.findOne(voto.id_encuesta).then((encuesta)=>{
                 if(encuesta==null){
                     res.status(400).send('Encuesta no encontrada'); 

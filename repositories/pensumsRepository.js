@@ -148,5 +148,6 @@ exports.findSinDependencias = async  function(id_carrera,id_alumno) {
 			id_clases.push(clase._id);
 		}
 	}
+	console.log(id_clases)
 	return id_clases;
 };
