@@ -48,12 +48,15 @@ exports.cerradas = function (req, res) {
         })
         return;
     }
-    model.find({active:false}, function (err, items) {
-        if (err)
-            res.status(500).send(err.message);
-        else
-            res.status(200).json(items);
+    UserRepository.getUser(req).then( async (user)=>{
+        model.find({active:false,id_catedratico:user.id}, function (err, items) {
+            if (err)
+                res.status(500).send(err.message);
+            else
+                res.status(200).json(items);
+        });
     });
+    
 };
 
 exports.findById = function (req, res) {
