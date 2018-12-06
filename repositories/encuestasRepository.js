@@ -72,7 +72,7 @@ exports.addItem = function (req, res) {
     let encuesta=req.body;
     UserRepository.getUser(req).then((user)=>{
         encuesta.id_catedratico=user._id;
-        encuesta.activo=true;
+        encuesta.activa=true;
         var newItem = new model(encuesta);
         newItem.save(function (err, item) {
             if (err)
