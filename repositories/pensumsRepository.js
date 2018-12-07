@@ -131,12 +131,16 @@ exports.findSinDependencias = async  function(id_carrera,id_alumno) {
 	let clasesPasadas= await clasesAprobadasRepository.findByUser(id_carrera,id_alumno);
 	let id_clases=[];
 	let id_clasespasadas=clasesPasadas.map((clase)=>clase.id_clase);
+	console.log('clases pasadas');
+	console.log(id_clasespasadas);
 	for(let i=0; i<clasesCarrera.length ; i ++){
 		let clase=clasesCarrera[i];
 		if(clase.id_requisito!==null && typeof clase.id_requisito!=='undefined' && clase.id_requisito.length>0){
 			let sinDependenciasPendienes=true;
 			for(let i=0;i<clase.id_requisito.length;i++){
 				let requisito=clase.id_requisito[i];
+				console.log('requisito');
+				console.log(requisito);
 				if(requisito.length>0 && id_clasespasadas.indexOf(requisito)<0){
 					sinDependenciasPendienes=false;
 				};
