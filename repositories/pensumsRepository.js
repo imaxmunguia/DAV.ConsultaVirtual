@@ -13,6 +13,26 @@ exports.findAll = function(req, res){
 };
 
 
+exports.lista = function(req, res){
+	model.find(function(err, items){
+    	if(err) 
+    		res.status(500).send(err.message);
+    	else
+			var lista={};
+			for(let i=0;i<items.length ; i++){
+				let pensum=items[i];
+				lista[pensum.id_carrera+'_'+pensum.nombre]={
+					id_carrera: pensum.id_carrera,
+					nombre:pensum.nombre,
+					desc_carrera: pensum.desc_carrera,
+				}
+			}
+			res.status(200).json(Object.values(lista))
+    	console.log('GET /pensums')
+	});
+};
+
+
 exports.cursadas = function(req, res){
 	var profile = UserRepository.getUserProfile(req)
     if(profile==null &&  (profile!=='Estudiante' || profile!=='Alumno')){

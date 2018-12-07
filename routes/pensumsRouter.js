@@ -13,7 +13,8 @@ router.route('/')
 	.get(pensumsRepository.findAll)
   	.post(pensumsRepository.addItem);
 
-
+router.route('/lista')
+.get(pensumsRepository.lista)
 
  router.route('/:id')
   .get(pensumsRepository.findById)
