@@ -30,7 +30,8 @@ exports.toggle = function(req,res){
 	UserRepository.getUser(req).then((user)=>{
         model.findOne({
             id_carrera:user.id_carrera,
-            id_alumno:user._id
+            id_alumno:user._id,
+            id_clase:req.params.id_clase
         }).then((claseCursada)=>{
             if(claseCursada==null){
                 let nuevaClaseCursada=new model({
