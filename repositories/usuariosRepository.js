@@ -1,7 +1,17 @@
 var model = require('../models/Usuarios');
 var jwt= require('jsonwebtoken');
 exports.findAll = function (req, res) {
-    model.find(function (err, items) {
+    let perfil=this.getProfile(req);
+    let filter={};
+    if(perfil!=="Administrador"){
+        return res.status(401).json({
+            'result':'Persmisos insuficientes'
+        });
+    }
+    filter={
+        'perfil':'Coordinador'
+    }
+    model.find(filter,function (err, items) {
         if (err)
             res.status(500).send(err.message);
         else
@@ -96,6 +106,10 @@ exports.signup = async function (req, res){
 }
 
 exports.getUserProfile = function (req){    
+    return getProfile(req);
+};
+
+getProfile = function(req){
     var token = req.get("Authorization")
     if(typeof token==='undefined'){
         return null;
@@ -109,7 +123,7 @@ exports.getUserProfile = function (req){
         return null;
     }
     return userToken.perfil;
-};
+}
 exports.getUser = function (req) {    
     var token = req.get("Authorization")
     if(typeof token==='undefined'){
@@ -124,25 +138,16 @@ exports.getUser = function (req) {
 };
 
 exports.addItem = function (req, res) {
-    console.log('POST /usuarios');
-    console.log(req.body);
-
-    var profile = UserRepository.getUserProfile(req)
+    var profile = this.getProfile(req)
     if(profile==null || profile!=='Administrador'){
         res.status(400).send('Permisos insuficientes');
         return;
     }
-
-    var newItem = new model({
-        cuenta:req.body.cuenta,
-        nombre:req.body.nombre,
-        id_carrera:req.body.id_carrera,
-        desc_carrera:req.body.desc_carrera,
-        correo:req.body.correo,
-        clave:req.body.clave,
-        perfil:'Coordinador'
-    });
-
+    let user=req.body;
+    user.perfil='Coordinador';
+    console.log(user);
+    var newItem = new model(user);
+    console.log(newItem);
     newItem.save(function (err, item) {
         if (err)
             return res.status(500).send(err.message);
@@ -169,6 +174,12 @@ exports.updateItem = function (req, res) {
 
 
 exports.deleteItem = function (req, res) {
+    let perfil=this.getProfile(req);
+    if(perfil!=="Administrador"){
+        return res.status(401).json({
+            'result':'Persmisos insuficientes'
+        });
+    }
     model.findById(req.params.id, function (err, item) {
         item.remove(function (err) {
             if (err)
