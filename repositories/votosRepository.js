@@ -10,13 +10,16 @@ exports.findAll = function (req, res) {
     }
     model.find({
         id_encuesta: req.params.id_encuesta
-    },function (err, items) {
+    }).lean().exec(async function (err, items) {
         if (err)
             res.status(500).send(err.message);
         else
+            for(let i=0;i<items.length ; i ++){
+                let alumno=await UserRepository.findOneById(items[i].id_alumno)
+                items[i]['correo']=alumno.correo;
+            }
             res.status(200).json(items);
-        console.log('GET /votos')
-    })
+    });
 }
 
 

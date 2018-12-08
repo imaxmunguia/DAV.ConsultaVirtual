@@ -11,17 +11,18 @@ exports.findAll = function (req, res) {
 };
 
 exports.findById = function (req, res) {
-    var profile = UserRepository.getUserProfile(req)
-    if(profile==null || profile!=='Administrador'){
-        res.status(400).send('Permisos insuficientes');
-        return;
-    }
     model.findById(req.params.id, function (err, items) {
         if (err)
             res.status(500).send(err.message);
         else
             res.status(200).json(items);
         console.log('GET /usuarios/id/' + req.params.id)
+    });
+};
+
+exports.findOneById = function (id) {
+    return model.findById(id, function (err, alumno) {
+        return alumno;
     });
 };
 
