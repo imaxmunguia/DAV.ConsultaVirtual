@@ -15,7 +15,6 @@ exports.findAll =  function (req, res) {
     UserRepository.getUser(req).then( async (user)=>{
         if(perfil==='Coordinador'){
             filters={
-                activa:true,
                 id_catedratico:user.id
             }
         }else if(perfil==='Alumno' || perfil==='Estudiante'){
@@ -74,6 +73,21 @@ exports.findById = function (req, res) {
     });
 };
 
+exports.toggle = function (req, res) {
+    model.findById(req.params.id, function (err, encuesta) {
+        if (err)
+            res.status(500).send(err.message);
+        else
+            encuesta.activa=!encuesta.activa;
+            encuesta.save().then((saved)=>{
+                res.status(200).json({
+                    'resultado':'Guardada'
+                });
+            });
+        console.log('GET /encuestas/id/' + req.params.id)
+    });
+};
+
 exports.findOne = function (id) {
     console.log(id);
     return model.findById(id, function (err, encuesta) {
@@ -96,7 +110,7 @@ exports.addItem = function (req, res) {
     let encuesta=req.body;
     UserRepository.getUser(req).then((user)=>{
         encuesta.id_catedratico=user._id;
-        encuesta.activa=true;
+        encuesta.activa=typeof encuesta.activa!=='undefined'?encuesta.activa :false;
         var newItem = new model(encuesta);
         newItem.save(function (err, item) {
             if (err)

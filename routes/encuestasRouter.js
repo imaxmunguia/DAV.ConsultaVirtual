@@ -7,7 +7,10 @@ router.route('/cerradas')
 
 router.route('/')
 	.get(repository.findAll)
-  	.post(repository.addItem);
+    .post(repository.addItem);
+    
+router.route('/toggle/:id')
+  	.post(repository.toggle);
 
  router.route('/:id')
   .get(repository.findById)
